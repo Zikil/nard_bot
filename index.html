@@ -10,37 +10,37 @@
 <body>
     <div class="container">
         <div class="current-throw">
-            <div class="dice dice1">1</div>
-            <div class="dice dice2">1</div>
+            <div class="dice" id="dice1Display">1</div>
+            <div class="dice" id="dice2Display">1</div>
         </div>
         
         <div class="controls">
             <div class="dice-selector">
                 <h3>Первый кубик</h3>
-                <div class="dice-buttons">
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>6</button>
+                <div class="dice-buttons" id="dice1Buttons">
+                    <button data-value="1">1</button>
+                    <button data-value="2">2</button>
+                    <button data-value="3">3</button>
+                    <button data-value="4">4</button>
+                    <button data-value="5">5</button>
+                    <button data-value="6">6</button>
                 </div>
             </div>
             
             <div class="dice-selector">
                 <h3>Второй кубик</h3>
-                <div class="dice-buttons">
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>6</button>
+                <div class="dice-buttons" id="dice2Buttons">
+                    <button data-value="1">1</button>
+                    <button data-value="2">2</button>
+                    <button data-value="3">3</button>
+                    <button data-value="4">4</button>
+                    <button data-value="5">5</button>
+                    <button data-value="6">6</button>
                 </div>
             </div>
         </div>
         
-        <button class="submit-button">Записать бросок</button>
+        <button class="submit-button" id="submitButton">Записать бросок</button>
         
         <div class="history">
             <h3>История бросков</h3>
