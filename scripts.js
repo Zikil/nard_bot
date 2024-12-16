@@ -3,8 +3,15 @@ let currentDice1 = 1;
 let currentDice2 = 1;
 let throws = [];
 
+// Инициализация Telegram WebApp
 tg.expand();
 tg.enableClosingConfirmation();
+
+// Установка темы
+document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
+document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
+document.documentElement.style.setProperty('--tg-theme-button-color', tg.buttonColor);
+document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.buttonTextColor);
 
 function setDice1(value) {
     currentDice1 = value;
@@ -25,11 +32,19 @@ function submitThrow() {
     throws.push(throwData);
     updateHistory();
     
+    // Отправляем данные в бот
     tg.sendData(JSON.stringify(throwData));
     
-    // Reset dice to 1
+    // Сбрасываем значения кубиков
     setDice1(1);
     setDice2(1);
+    
+    // Показываем уведомление
+    tg.showPopup({
+        title: 'Бросок записан',
+        message: `${currentDice1}-${currentDice2} (сумма: ${currentDice1 + currentDice2})`,
+        buttons: [{ type: 'ok' }]
+    });
 }
 
 function updateHistory() {
