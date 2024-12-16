@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Счётчик кубиков для нард</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="current-throw">
+            <div class="dice dice1">1</div>
+            <div class="dice dice2">1</div>
+        </div>
+        
+        <div class="controls">
+            <div class="dice-selector">
+                <h3>Первый кубик</h3>
+                <div class="dice-buttons">
+                    <button onclick="setDice1(1)">1</button>
+                    <button onclick="setDice1(2)">2</button>
+                    <button onclick="setDice1(3)">3</button>
+                    <button onclick="setDice1(4)">4</button>
+                    <button onclick="setDice1(5)">5</button>
+                    <button onclick="setDice1(6)">6</button>
+                </div>
+            </div>
+            
+            <div class="dice-selector">
+                <h3>Второй кубик</h3>
+                <div class="dice-buttons">
+                    <button onclick="setDice2(1)">1</button>
+                    <button onclick="setDice2(2)">2</button>
+                    <button onclick="setDice2(3)">3</button>
+                    <button onclick="setDice2(4)">4</button>
+                    <button onclick="setDice2(5)">5</button>
+                    <button onclick="setDice2(6)">6</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="submit-button" onclick="submitThrow()">Записать бросок</button>
+        
+        <div class="history">
+            <h3>История бросков</h3>
+            <div id="throwsHistory"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
