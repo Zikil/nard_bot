@@ -28,6 +28,11 @@ function initializeApp() {
     });
     tg.MainButton.hide();
     
+    // Добавляем обработчик для MainButton один раз
+    tg.MainButton.onClick(function() {
+        endGameSession();
+    });
+    
     // Начинаем новую игровую сессию
     gameSession.isActive = true;
     gameSession.throws = [];
@@ -153,13 +158,8 @@ function submitThrow() {
         tg.MainButton.show();
     }
     
-    // Обновляем текст на кнопке
+    // Только обновляем текст на кнопке
     tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
-    
-    // Добавляем обработчик для завершения игры
-    tg.MainButton.onClick(() => {
-        endGameSession();
-    });
     
     console.log('Throw added:', throwData);
 }
