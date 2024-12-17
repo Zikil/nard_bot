@@ -3,6 +3,10 @@ let tg = window.Telegram.WebApp; // Объект для взаимодейств
 let currentDice1 = 1; // Текущее значение первого кубика
 let currentDice2 = 1; // Текущее значение второго кубика 
 let throws = []; // Массив для хранения истории бросков
+let gameSession = {
+    throws: [],
+    isActive: false
+};
 
 // Функция инициализации при загрузке страницы
 window.onload = function() {
@@ -19,10 +23,14 @@ function initializeApp() {
     
     // Инициализируем MainButton
     tg.MainButton.setParams({
-        text: 'Отправка броска...',
-        color: '#2cab37',
+        text: 'Завершить игру',
+        color: '#ff3b30',
     });
     tg.MainButton.hide();
+    
+    // Начинаем новую игровую сессию
+    gameSession.isActive = true;
+    gameSession.throws = [];
     
     // Получаем ссылки на элементы управления
     const dice1Buttons = document.getElementById('dice1Buttons'); // Кнопки первого кубика
@@ -87,47 +95,64 @@ function highlightSelectedButton(containerId, value) {
 function submitThrow() {
     // Формируем данные броска
     const throwData = {
-        type: 'throw',
-        dice: [currentDice1, currentDice2]
+        dice: [currentDice1, currentDice2],
+        timestamp: new Date().toISOString()
     };
     
-    throws.unshift(throwData); // Добавляем бросок в начало истории
-    updateHistory(); // Обновляем отображение истории
+    // Добавляем бросок в сессию
+    gameSession.throws.push(throwData);
+    throws.unshift(throwData); // Для отображения в истории
+    updateHistory();
     
-    // Отправляем данные в Telegram без закрытия приложения
-    try {
-        // Используем MainButton для отправки данных
-        if (!tg.MainButton.isVisible) {
-            tg.MainButton.setText('Отправка...');
-            tg.MainButton.show();
-        }
-        
-        // Отправляем данные через MainButton
-        tg.MainButton.onClick(() => {
-            tg.sendData(JSON.stringify(throwData));
-        });
-        
-        // Скрываем MainButton после отправки
-        setTimeout(() => {
-            tg.MainButton.hide();
-        }, 1000);
-        
-        console.log('Data sent to Telegram:', throwData);
-    } catch (error) {
-        console.error('Error sending data to Telegram:', error);
+    // Показываем кнопку завершения игры после первого броска
+    if (!tg.MainButton.isVisible) {
+        tg.MainButton.show();
     }
+    
+    // Добавляем обработчик для завершения игры
+    tg.MainButton.onClick(() => {
+        endGameSession();
+    });
+    
+    console.log('Throw added to session:', throwData);
+}
+
+// Добавим новую функцию для завершения игровой сессии
+function endGameSession() {
+    if (gameSession.throws.length === 0) {
+        console.log('No throws to send');
+        return;
+    }
+    
+    const sessionData = {
+        type: 'game_session',
+        throws: gameSession.throws
+    };
+    
+    // Отправляем все данные сессии в бот
+    tg.sendData(JSON.stringify(sessionData));
+    
+    // Сбрасываем сессию
+    gameSession.throws = [];
+    gameSession.isActive = false;
+    
+    console.log('Game session ended and data sent:', sessionData);
 }
 
 // Функция обновления истории бросков
 function updateHistory() {
     const historyDiv = document.getElementById('throwsHistory');
-    // Формируем HTML для отображения истории бросков
     historyDiv.innerHTML = throws
         .map((t, i) => `
             <div class="throw-record">
-                Бросок ${i + 1}: ${t.dice[0]}-${t.dice[1]}
+                Бросок ${throws.length - i}: ${t.dice[0]}-${t.dice[1]}
                 (сумма: ${t.dice[0] + t.dice[1]})
             </div>
         `)
         .join('');
+        
+    // Обновляем текст на кнопке завершения
+    if (throws.length > 0) {
+        tg.MainButton.setText(`Завершить игру (${throws.length} бросков)`);
+    }
 }
