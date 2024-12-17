@@ -91,30 +91,72 @@ function highlightSelectedButton(containerId, value) {
     }
 }
 
-// Функция отправки броска
+// Добавим функцию подсчета суммы с учетом дублей
+function calculateThrowSum(dice1, dice2) {
+    if (dice1 === dice2) {
+        return (dice1 + dice2) * 2; // Умножаем на 2, так как сумма уже удвоена
+    }
+    return dice1 + dice2;
+}
+
+// Обновим функцию updateHistory
+function updateHistory() {
+    const historyDiv = document.getElementById('throwsHistory');
+    const summaryDiv = document.querySelector('.throw-summary') || document.createElement('div');
+    summaryDiv.className = 'throw-summary';
+    
+    // Подсчитываем общую сумму с учетом дублей
+    const totalSum = throws.reduce((sum, t) => {
+        return sum + calculateThrowSum(t.dice[0], t.dice[1]);
+    }, 0);
+    
+    // Обновляем сводку
+    summaryDiv.innerHTML = `
+        <div class="sum">Общая сумма: ${totalSum}</div>
+        <div class="count">Количество бросков: ${throws.length}</div>
+    `;
+    
+    // Вставляем сводку перед историей
+    const controlsDiv = document.querySelector('.controls');
+    controlsDiv.insertAdjacentElement('afterend', summaryDiv);
+    
+    // Обновляем историю бросков
+    historyDiv.innerHTML = throws
+        .map((t, i) => {
+            const sum = calculateThrowSum(t.dice[0], t.dice[1]);
+            const isDubble = t.dice[0] === t.dice[1];
+            return `
+                <div class="throw-record">
+                    <span>Бросок ${throws.length - i}: ${t.dice[0]}-${t.dice[1]}</span>
+                    <span class="sum">${isDubble ? '🎯 ' : ''}${sum}</span>
+                </div>
+            `;
+        })
+        .join('');
+}
+
+// Обновим функцию submitThrow для формирования данных
 function submitThrow() {
-    // Формируем данные броска
     const throwData = {
+        type: 'game_session',
         dice: [currentDice1, currentDice2],
+        sum: calculateThrowSum(currentDice1, currentDice2),
         timestamp: new Date().toISOString()
     };
     
-    // Добавляем бросок в сессию
-    gameSession.throws.push(throwData);
-    throws.unshift(throwData); // Для отображения в истории
+    throws.unshift(throwData);
     updateHistory();
     
-    // Показываем кнопку завершения игры после первого броска
+    // Показываем MainButton после первого броска
     if (!tg.MainButton.isVisible) {
         tg.MainButton.show();
     }
     
-    // Добавляем обработчик для завершения игры
     tg.MainButton.onClick(() => {
         endGameSession();
     });
     
-    console.log('Throw added to session:', throwData);
+    console.log('Throw added:', throwData);
 }
 
 // Добавим новую функцию для завершения игровой сессии
@@ -137,22 +179,4 @@ function endGameSession() {
     gameSession.isActive = false;
     
     console.log('Game session ended and data sent:', sessionData);
-}
-
-// Функция обновления истории бросков
-function updateHistory() {
-    const historyDiv = document.getElementById('throwsHistory');
-    historyDiv.innerHTML = throws
-        .map((t, i) => `
-            <div class="throw-record">
-                Бросок ${throws.length - i}: ${t.dice[0]}-${t.dice[1]}
-                (сумма: ${t.dice[0] + t.dice[1]})
-            </div>
-        `)
-        .join('');
-        
-    // Обновляем текст на кнопке завершения
-    if (throws.length > 0) {
-        tg.MainButton.setText(`Завершить игру (${throws.length} бросков)`);
-    }
 }

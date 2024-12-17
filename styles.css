@@ -19,14 +19,14 @@ body {
 }
 
 .dice {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border: 2px solid var(--tg-theme-button-color, #3390ec);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
     background-color: var(--tg-theme-bg-color, #fff);
 }
@@ -43,17 +43,19 @@ body {
 
 .dice-buttons {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
 .dice-buttons button {
-    padding: 12px;
+    padding: 20px;
     border: none;
     border-radius: 8px;
     background-color: var(--tg-theme-button-color, #3390ec);
     color: var(--tg-theme-button-text-color, #fff);
-    font-size: 16px;
+    font-size: 24px;
+    font-weight: bold;
     cursor: pointer;
     touch-action: manipulation;
 }
@@ -66,12 +68,13 @@ body {
 
 .submit-button {
     width: 100%;
-    padding: 16px;
+    padding: 20px;
     border: none;
     border-radius: 8px;
     background-color: var(--tg-theme-button-color, #3390ec);
     color: var(--tg-theme-button-text-color, #fff);
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: bold;
     margin: 20px 0;
     cursor: pointer;
     touch-action: manipulation;
@@ -93,9 +96,38 @@ body {
 }
 
 .throw-record {
-    padding: 12px;
+    padding: 15px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-radius: 8px;
     background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+}
+
+.throw-record .sum {
+    font-weight: bold;
+    color: var(--tg-theme-button-color, #3390ec);
+}
+
+.throw-summary {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    border-radius: 12px;
+}
+
+.throw-summary .sum {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--tg-theme-button-color, #3390ec);
+}
+
+.throw-summary .count {
+    font-size: 16px;
+    color: var(--tg-theme-hint-color, #999);
+    margin-top: 5px;
 }
 
 /* Mobile optimizations */
