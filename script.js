@@ -138,12 +138,13 @@ function updateHistory() {
 // Обновим функцию submitThrow для формирования данных
 function submitThrow() {
     const throwData = {
-        type: 'game_session',
         dice: [currentDice1, currentDice2],
         sum: calculateThrowSum(currentDice1, currentDice2),
         timestamp: new Date().toISOString()
     };
     
+    // Добавляем бросок в оба массива
+    gameSession.throws.push(throwData);
     throws.unshift(throwData);
     updateHistory();
     
@@ -152,6 +153,10 @@ function submitThrow() {
         tg.MainButton.show();
     }
     
+    // Обновляем текст на кнопке
+    tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
+    
+    // Добавляем обработчик для завершения игры
     tg.MainButton.onClick(() => {
         endGameSession();
     });
@@ -161,20 +166,21 @@ function submitThrow() {
 
 // Добавим новую функцию для завершения игровой сессии
 function endGameSession() {
-    if (gameSession.throws.length === 0) {
+    if (throws.length === 0) {
         console.log('No throws to send');
         return;
     }
     
     const sessionData = {
         type: 'game_session',
-        throws: gameSession.throws
+        throws: throws // Используем основной массив throws вместо gameSession.throws
     };
     
     // Отправляем все данные сессии в бот
     tg.sendData(JSON.stringify(sessionData));
     
-    // Сбрасываем сессию
+    // Сбрасываем данные
+    throws = [];
     gameSession.throws = [];
     gameSession.isActive = false;
     
