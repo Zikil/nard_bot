@@ -171,18 +171,30 @@ function endGameSession() {
         return;
     }
     
-    const sessionData = {
-        type: 'game_session',
-        throws: throws // Используем основной массив throws вместо gameSession.throws
-    };
-    
-    // Отправляем все данные сессии в бот
-    tg.sendData(JSON.stringify(sessionData));
-    
-    // Сбрасываем данные
-    throws = [];
-    gameSession.throws = [];
-    gameSession.isActive = false;
-    
-    console.log('Game session ended and data sent:', sessionData);
+    // Используем нативный диалог Telegram
+    tg.showConfirm(
+        'Завершить игру?',
+        (confirmed) => {
+            if (confirmed) {
+                const sessionData = {
+                    type: 'game_session',
+                    throws: throws
+                };
+                
+                // Отправляем все данные сессии в бот
+                tg.sendData(JSON.stringify(sessionData));
+                
+                // Сбрасываем данные
+                throws = [];
+                gameSession.throws = [];
+                gameSession.isActive = false;
+                
+                console.log('Game session ended and data sent:', sessionData);
+            } else {
+                console.log('Game session end cancelled by user');
+                // Возвращаем кнопку в исходное состояние
+                tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
+            }
+        }
+    );
 }
