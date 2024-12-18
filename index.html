@@ -10,34 +10,38 @@
 <body>
     <div class="container">
         <div class="current-throw">
-            <div class="dice" id="dice1Display">1</div>
-            <div class="dice" id="dice2Display">1</div>
+            <div class="dice-display">
+                <div class="dice" id="dice1Display">1</div>
+                <div class="dice" id="dice2Display">1</div>
+            </div>
+            <div class="current-stats">
+                <span class="sum">Сумма: 0</span>
+                <span>Бросков: 0</span>
+            </div>
         </div>
         
-        <div class="controls">
-            <div class="dice-selectors">
-                <div class="dice-selector">
-                    <h3>Первый кубик</h3>
-                    <div class="dice-buttons" id="dice1Buttons">
-                        <button data-value="1">1</button>
-                        <button data-value="2">2</button>
-                        <button data-value="3">3</button>
-                        <button data-value="4">4</button>
-                        <button data-value="5">5</button>
-                        <button data-value="6">6</button>
-                    </div>
+        <div class="dice-selectors">
+            <div class="dice-selector">
+                <h3>Первый кубик</h3>
+                <div class="dice-buttons" id="dice1Buttons">
+                    <button data-value="1">1</button>
+                    <button data-value="2">2</button>
+                    <button data-value="3">3</button>
+                    <button data-value="4">4</button>
+                    <button data-value="5">5</button>
+                    <button data-value="6">6</button>
                 </div>
-                
-                <div class="dice-selector">
-                    <h3>Второй кубик</h3>
-                    <div class="dice-buttons" id="dice2Buttons">
-                        <button data-value="1">1</button>
-                        <button data-value="2">2</button>
-                        <button data-value="3">3</button>
-                        <button data-value="4">4</button>
-                        <button data-value="5">5</button>
-                        <button data-value="6">6</button>
-                    </div>
+            </div>
+            
+            <div class="dice-selector">
+                <h3>Второй кубик</h3>
+                <div class="dice-buttons" id="dice2Buttons">
+                    <button data-value="1">1</button>
+                    <button data-value="2">2</button>
+                    <button data-value="3">3</button>
+                    <button data-value="4">4</button>
+                    <button data-value="5">5</button>
+                    <button data-value="6">6</button>
                 </div>
             </div>
         </div>
