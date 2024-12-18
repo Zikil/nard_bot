@@ -86,7 +86,7 @@ function highlightSelectedButton(containerId, value) {
     const container = document.getElementById(containerId);
     const buttons = container.getElementsByTagName('button');
     
-    // Перебираем все кнопки и подсвечиваем только выбранну��
+    // Перебираем все кнопки и подсвечиваем только выбранную
     for (let button of buttons) {
         if (parseInt(button.getAttribute('data-value')) === value) {
             button.classList.add('selected');
@@ -108,29 +108,32 @@ function calculateThrowSum(dice1, dice2) {
 function updateHistory() {
     const historyDiv = document.getElementById('throwsHistory');
     
-    // Подсчитываем общую сумму с учетом дублей
-    const totalSum = throws.reduce((sum, t) => {
-        return sum + calculateThrowSum(t.dice[0], t.dice[1]);
-    }, 0);
+    // Подсчитываем суммы с учетом неиспользованных очков
+    const totalBaseSum = throws.reduce((sum, t) => sum + calculateThrowSum(t.dice[0], t.dice[1]), 0);
+    const totalFinalSum = throws.reduce((sum, t) => sum + calculateFinalSum(t), 0);
     
     // Обновляем статистику в верхней плашке
     const currentStatsSum = document.querySelector('.current-stats .sum');
     const currentStatsCount = document.querySelector('.current-stats span:last-child');
-    currentStatsSum.textContent = `Сумма: ${totalSum}`;
+    currentStatsSum.innerHTML = `Сумма: ${totalFinalSum}${totalBaseSum !== totalFinalSum ? ` (${totalBaseSum})` : ''}`;
     currentStatsCount.textContent = `Бросков: ${throws.length}`;
     
     // Обновляем историю бросков
     historyDiv.innerHTML = throws
         .map((t, i) => {
-            const sum = calculateThrowSum(t.dice[0], t.dice[1]);
+            const baseSum = calculateThrowSum(t.dice[0], t.dice[1]);
+            const finalSum = calculateFinalSum(t);
             const isDubble = t.dice[0] === t.dice[1];
             return `
-                <div class="throw-record">
+                <div class="throw-record" onclick="openUnusedPointsModal(${i})">
                     <div class="throw-info">
                         <span>Бросок ${throws.length - i}: ${t.dice[0]}-${t.dice[1]}</span>
-                        <span class="sum">${isDubble ? '🎯 ' : ''}${sum}</span>
+                        <div class="sums">
+                            <span class="sum">${isDubble ? '🎯 ' : ''}${finalSum}</span>
+                            ${t.unusedPoints ? `<span class="unused">-${t.unusedPoints}</span>` : ''}
+                        </div>
                     </div>
-                    ${i === 0 ? '<button class="delete-button" onclick="deleteLastThrow()">❌</button>' : ''}
+                    ${i === 0 ? '<button class="delete-button" onclick="event.stopPropagation(); deleteLastThrow()">❌</button>' : ''}
                 </div>
             `;
         })
@@ -169,6 +172,7 @@ function submitThrow() {
     const throwData = {
         dice: [currentDice1, currentDice2],
         sum: calculateThrowSum(currentDice1, currentDice2),
+        unusedPoints: 0,
         timestamp: new Date().toISOString()
     };
     
@@ -223,4 +227,52 @@ function endGameSession() {
             }
         }
     );
+}
+
+// Функция для подсчета итоговой суммы броска
+function calculateFinalSum(throw_data) {
+    const baseSum = calculateThrowSum(throw_data.dice[0], throw_data.dice[1]);
+    return baseSum - (throw_data.unusedPoints || 0);
+}
+
+// Функция для открытия модального окна редактирования
+function openUnusedPointsModal(throwIndex) {
+    const modal = document.getElementById('unusedPointsModal');
+    const input = modal.querySelector('input');
+    const throw_data = throws[throwIndex];
+    
+    input.value = throw_data.unusedPoints || 0;
+    modal.dataset.throwIndex = throwIndex;
+    modal.style.display = 'flex';
+    
+    // Обработчики для кнопок +/-
+    const minusBtn = modal.querySelector('.minus');
+    const plusBtn = modal.querySelector('.plus');
+    
+    minusBtn.onclick = () => {
+        const currentValue = parseInt(input.value) || 0;
+        if (currentValue > 0) input.value = currentValue - 1;
+    };
+    
+    plusBtn.onclick = () => {
+        const currentValue = parseInt(input.value) || 0;
+        const maxPoints = calculateThrowSum(throw_data.dice[0], throw_data.dice[1]);
+        if (currentValue < maxPoints) input.value = currentValue + 1;
+    };
+    
+    // Обработчики для кнопок отмены и сохранения
+    modal.querySelector('.cancel').onclick = () => {
+        modal.style.display = 'none';
+    };
+    
+    modal.querySelector('.save').onclick = () => {
+        const throwIndex = parseInt(modal.dataset.throwIndex);
+        const unusedPoints = parseInt(input.value) || 0;
+        
+        throws[throwIndex].unusedPoints = unusedPoints;
+        gameSession.throws[gameSession.throws.length - 1 - throwIndex].unusedPoints = unusedPoints;
+        
+        updateHistory();
+        modal.style.display = 'none';
+    };
 }

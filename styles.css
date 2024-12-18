@@ -49,12 +49,12 @@ body {
 }
 
 .current-stats span {
-    font-size: 14px;
+    font-size: 20px;
     color: var(--tg-theme-hint-color, #999);
 }
 
 .current-stats .sum {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
     color: var(--tg-theme-button-color, #3390ec);
 }
@@ -242,4 +242,84 @@ body {
         height: 50px;
         font-size: 20px;
     }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--tg-theme-bg-color, #fff);
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 320px;
+}
+
+.unused-points-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.unused-points-controls input {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    padding: 8px;
+    border: 1px solid var(--tg-theme-button-color, #3390ec);
+    border-radius: 8px;
+}
+
+.unused-points-controls button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: var(--tg-theme-button-color, #3390ec);
+    color: var(--tg-theme-button-text-color, #fff);
+    font-size: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.modal-buttons .cancel {
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000);
+}
+
+.modal-buttons .save {
+    background: var(--tg-theme-button-color, #3390ec);
+    color: var(--tg-theme-button-text-color, #fff);
+}
+
+.throw-record {
+    cursor: pointer;
+}
+
+.throw-record .unused {
+    color: var(--tg-theme-destructive-text-color, #ff3b30);
+    font-size: 14px;
 }
