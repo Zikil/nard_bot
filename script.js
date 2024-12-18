@@ -70,15 +70,19 @@ function initializeApp() {
 // Функция установки значения первого кубика
 function setDice1(value) {
     currentDice1 = value;
-    document.getElementById('dice1Display').textContent = value; // Обновляем отображение
-    highlightSelectedButton('dice1Buttons', value); // Подсвечиваем выбранную кнопку
+    const dice = document.getElementById('dice1Display');
+    dice.setAttribute('data-value', value);
+    dice.innerHTML = createDiceDots(value);
+    highlightSelectedButton('dice1Buttons', value);
 }
 
 // Функция установки значения второго кубика
 function setDice2(value) {
     currentDice2 = value;
-    document.getElementById('dice2Display').textContent = value; // Обновляем отображение
-    highlightSelectedButton('dice2Buttons', value); // Подсвечиваем выбранную кнопку
+    const dice = document.getElementById('dice2Display');
+    dice.setAttribute('data-value', value);
+    dice.innerHTML = createDiceDots(value);
+    highlightSelectedButton('dice2Buttons', value);
 }
 
 // Функция подсветки выбранной кнопки
@@ -183,7 +187,7 @@ function submitThrow() {
     // Обновляем историю и статистику
     updateHistory();
     
-    // Показывае�� MainButton после первого броска
+    // Показываем MainButton после первого броска
     if (!tg.MainButton.isVisible) {
         tg.MainButton.show();
     }
@@ -316,4 +320,12 @@ function toggleDiceUnused(button) {
     // Обновляем отображение суммы
     modal.querySelector('.throw-sum').textContent = 
         `Сумма: ${baseSum - unusedSum}${unusedSum > 0 ? ` (${baseSum})` : ''}`;
+}
+
+function createDiceDots(value) {
+    const dots = [];
+    for (let i = 0; i < (value === 1 ? 1 : value === 3 ? 3 : value === 5 ? 5 : 6); i++) {
+        dots.push('<div class="dot"></div>');
+    }
+    return dots.join('');
 }
