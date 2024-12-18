@@ -86,7 +86,7 @@ function highlightSelectedButton(containerId, value) {
     const container = document.getElementById(containerId);
     const buttons = container.getElementsByTagName('button');
     
-    // Перебираем все кнопки и подсвечиваем только выбранну��
+    // Перебираем все кнопки и подсвечиваем только выбранную
     for (let button of buttons) {
         if (parseInt(button.getAttribute('data-value')) === value) {
             button.classList.add('selected');
@@ -183,7 +183,7 @@ function submitThrow() {
     // Обновляем историю и статистику
     updateHistory();
     
-    // Показываем MainButton после первого броска
+    // Показывае�� MainButton после первого броска
     if (!tg.MainButton.isVisible) {
         tg.MainButton.show();
     }
@@ -300,33 +300,20 @@ function openUnusedPointsModal(throwIndex) {
 
 // Функция для переключения состояния кубика
 function toggleDiceUnused(button) {
-    const diceSelector = button.parentElement;
-    const currentIndex = parseInt(button.dataset.index);
-    const isNowUnused = !button.classList.contains('unused');
-    
-    // Получаем все кнопки
-    const allButtons = diceSelector.querySelectorAll('.dice-button');
-    
-    if (isNowUnused) {
-        // Если отмечаем как неиспользованный, проверяем все кнопки до текущей
-        for (let i = 0; i <= currentIndex; i++) {
-            allButtons[i].classList.add('unused');
-        }
-    } else {
-        // Если снимаем отметку, проверяем все кнопки после текущей
-        for (let i = currentIndex; i < allButtons.length; i++) {
-            allButtons[i].classList.remove('unused');
-        }
-    }
+    // Просто переключаем класс для нажатого кубика
+    button.classList.toggle('unused');
     
     // Обновляем сумму в превью
     const modal = document.getElementById('unusedPointsModal');
     const throwIndex = parseInt(modal.dataset.throwIndex);
     const throw_data = throws[throwIndex];
     const baseSum = calculateThrowSum(throw_data.dice[0], throw_data.dice[1]);
-    const unusedSum = Array.from(diceSelector.querySelectorAll('.dice-button.unused'))
+    
+    // Считаем сумму всех выбранных (неиспользованных) кубиков
+    const unusedSum = Array.from(modal.querySelectorAll('.dice-button.unused'))
         .reduce((sum, button) => sum + parseInt(button.dataset.value), 0);
     
+    // Обновляем отображение суммы
     modal.querySelector('.throw-sum').textContent = 
         `Сумма: ${baseSum - unusedSum}${unusedSum > 0 ? ` (${baseSum})` : ''}`;
 }
