@@ -86,7 +86,7 @@ function highlightSelectedButton(containerId, value) {
     const container = document.getElementById(containerId);
     const buttons = container.getElementsByTagName('button');
     
-    // Перебираем все кнопки и подсвечиваем только выбранную
+    // Перебираем все кнопки и подсвечиваем только выбранну��
     for (let button of buttons) {
         if (parseInt(button.getAttribute('data-value')) === value) {
             button.classList.add('selected');
@@ -104,26 +104,20 @@ function calculateThrowSum(dice1, dice2) {
     return dice1 + dice2;
 }
 
-// Обновим функцию updateHistory
+// Обновляем функцию updateHistory
 function updateHistory() {
     const historyDiv = document.getElementById('throwsHistory');
-    const summaryDiv = document.querySelector('.throw-summary') || document.createElement('div');
-    summaryDiv.className = 'throw-summary';
     
     // Подсчитываем общую сумму с учетом дублей
     const totalSum = throws.reduce((sum, t) => {
         return sum + calculateThrowSum(t.dice[0], t.dice[1]);
     }, 0);
     
-    // Обновляем сводку
-    summaryDiv.innerHTML = `
-        <div class="sum">Общая сумма: ${totalSum}</div>
-        <div class="count">Количество бросков: ${throws.length}</div>
-    `;
-    
-    // Вставляем сводку перед историей
-    const controlsDiv = document.querySelector('.controls');
-    controlsDiv.insertAdjacentElement('afterend', summaryDiv);
+    // Обновляем статистику в верхней плашке
+    const currentStatsSum = document.querySelector('.current-stats .sum');
+    const currentStatsCount = document.querySelector('.current-stats span:last-child');
+    currentStatsSum.textContent = `Сумма: ${totalSum}`;
+    currentStatsCount.textContent = `Бросков: ${throws.length}`;
     
     // Обновляем историю бросков
     historyDiv.innerHTML = throws
@@ -143,7 +137,34 @@ function updateHistory() {
         .join('');
 }
 
-// Обновим функцию submitThrow для формирования данных
+// Обновляем функцию deleteLastThrow
+function deleteLastThrow() {
+    if (throws.length > 0) {
+        tg.showConfirm(
+            'Удалить последний бросок?',
+            (confirmed) => {
+                if (confirmed) {
+                    throws.shift();
+                    gameSession.throws.pop();
+                    
+                    // Обновляем историю и статистику
+                    updateHistory();
+                    
+                    // Обновляем кнопку завершения игры
+                    if (throws.length > 0) {
+                        tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
+                    } else {
+                        tg.MainButton.hide();
+                    }
+                    
+                    console.log('Last throw deleted');
+                }
+            }
+        );
+    }
+}
+
+// Обновляем функцию submitThrow
 function submitThrow() {
     const throwData = {
         dice: [currentDice1, currentDice2],
@@ -154,6 +175,8 @@ function submitThrow() {
     // Добавляем бросок в оба массива
     gameSession.throws.push(throwData);
     throws.unshift(throwData);
+    
+    // Обновляем историю и статистику
     updateHistory();
     
     // Показываем MainButton после первого броска
@@ -161,7 +184,7 @@ function submitThrow() {
         tg.MainButton.show();
     }
     
-    // Только обновляем текст на кнопке
+    // Обновляем текст на кнопке
     tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
     
     console.log('Throw added:', throwData);
@@ -200,33 +223,4 @@ function endGameSession() {
             }
         }
     );
-}
-
-// Добавим функцию удаления последнего броска
-function deleteLastThrow() {
-    if (throws.length > 0) {
-        // Используем нативный диалог Telegram для подтверждения
-        tg.showConfirm(
-            'Удалить последний бросок?',
-            (confirmed) => {
-                if (confirmed) {
-                    // Удаляем последний бросок из обоих массивов
-                    throws.shift();
-                    gameSession.throws.pop();
-                    
-                    // Обновляем историю
-                    updateHistory();
-                    
-                    // Обновляем кнопку завершения игры
-                    if (throws.length > 0) {
-                        tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
-                    } else {
-                        tg.MainButton.hide();
-                    }
-                    
-                    console.log('Last throw deleted');
-                }
-            }
-        );
-    }
 }
