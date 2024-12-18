@@ -130,6 +130,33 @@ body {
     margin-top: 5px;
 }
 
+.throw-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    color: var(--tg-theme-destructive-text-color, #ff3b30);
+    font-size: 16px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 59, 48, 0.1);
+}
+
+.delete-button:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+}
+
 /* Mobile optimizations */
 @media (max-width: 480px) {
     .dice-buttons {

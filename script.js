@@ -132,8 +132,11 @@ function updateHistory() {
             const isDubble = t.dice[0] === t.dice[1];
             return `
                 <div class="throw-record">
-                    <span>Бросок ${throws.length - i}: ${t.dice[0]}-${t.dice[1]}</span>
-                    <span class="sum">${isDubble ? '🎯 ' : ''}${sum}</span>
+                    <div class="throw-info">
+                        <span>Бросок ${throws.length - i}: ${t.dice[0]}-${t.dice[1]}</span>
+                        <span class="sum">${isDubble ? '🎯 ' : ''}${sum}</span>
+                    </div>
+                    ${i === 0 ? '<button class="delete-button" onclick="deleteLastThrow()">❌</button>' : ''}
                 </div>
             `;
         })
@@ -197,4 +200,33 @@ function endGameSession() {
             }
         }
     );
+}
+
+// Добавим функцию удаления последнего броска
+function deleteLastThrow() {
+    if (throws.length > 0) {
+        // Используем нативный диалог Telegram для подтверждения
+        tg.showConfirm(
+            'Удалить последний бросок?',
+            (confirmed) => {
+                if (confirmed) {
+                    // Удаляем последний бросок из обоих массивов
+                    throws.shift();
+                    gameSession.throws.pop();
+                    
+                    // Обновляем историю
+                    updateHistory();
+                    
+                    // Обновляем кнопку завершения игры
+                    if (throws.length > 0) {
+                        tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
+                    } else {
+                        tg.MainButton.hide();
+                    }
+                    
+                    console.log('Last throw deleted');
+                }
+            }
+        );
+    }
 }
