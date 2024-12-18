@@ -86,7 +86,7 @@ function highlightSelectedButton(containerId, value) {
     const container = document.getElementById(containerId);
     const buttons = container.getElementsByTagName('button');
     
-    // Перебираем все кнопки и подсвечиваем только выбранную
+    // Перебираем все кнопки и подсвечиваем только выбранну��
     for (let button of buttons) {
         if (parseInt(button.getAttribute('data-value')) === value) {
             button.classList.add('selected');
@@ -235,30 +235,49 @@ function calculateFinalSum(throw_data) {
     return baseSum - (throw_data.unusedPoints || 0);
 }
 
-// Функция для открытия модального окна редактирования
+// Обновим функцию открытия модального окна
 function openUnusedPointsModal(throwIndex) {
     const modal = document.getElementById('unusedPointsModal');
-    const input = modal.querySelector('input');
     const throw_data = throws[throwIndex];
+    const dice1 = throw_data.dice[0];
+    const dice2 = throw_data.dice[1];
+    const isDouble = dice1 === dice2;
     
-    input.value = throw_data.unusedPoints || 0;
+    // Обновляем информацию о броске
+    const throwPreview = modal.querySelector('.throw-preview');
+    const baseSum = calculateThrowSum(dice1, dice2);
+    throwPreview.querySelector('.throw-info').textContent = 
+        `Бросок: ${dice1}-${dice2}${isDouble ? ' 🎯' : ''}`;
+    throwPreview.querySelector('.throw-sum').textContent = 
+        `Сумма: ${baseSum}`;
+    
+    // Создаем селектор кубиков
+    const diceSelector = modal.querySelector('.unused-dice-selector');
+    diceSelector.innerHTML = '';
+    
+    // Массив всех кубиков в броске (учитываем дубли)
+    const allDice = isDouble ? [dice1, dice1, dice1, dice1] : [dice1, dice2];
+    
+    // Создаем кнопки для каждого кубика
+    allDice.forEach((value, index) => {
+        const diceButton = document.createElement('button');
+        diceButton.className = 'dice-button';
+        diceButton.textContent = value;
+        diceButton.dataset.value = value;
+        diceButton.dataset.index = index;
+        
+        // Восстанавливаем состояние неиспользованных кубиков
+        const unusedCount = throw_data.unusedPoints || 0;
+        if (index < unusedCount) {
+            diceButton.classList.add('unused');
+        }
+        
+        diceButton.onclick = () => toggleDiceUnused(diceButton);
+        diceSelector.appendChild(diceButton);
+    });
+    
     modal.dataset.throwIndex = throwIndex;
     modal.style.display = 'flex';
-    
-    // Обработчики для кнопок +/-
-    const minusBtn = modal.querySelector('.minus');
-    const plusBtn = modal.querySelector('.plus');
-    
-    minusBtn.onclick = () => {
-        const currentValue = parseInt(input.value) || 0;
-        if (currentValue > 0) input.value = currentValue - 1;
-    };
-    
-    plusBtn.onclick = () => {
-        const currentValue = parseInt(input.value) || 0;
-        const maxPoints = calculateThrowSum(throw_data.dice[0], throw_data.dice[1]);
-        if (currentValue < maxPoints) input.value = currentValue + 1;
-    };
     
     // Обработчики для кнопок отмены и сохранения
     modal.querySelector('.cancel').onclick = () => {
@@ -266,13 +285,48 @@ function openUnusedPointsModal(throwIndex) {
     };
     
     modal.querySelector('.save').onclick = () => {
-        const throwIndex = parseInt(modal.dataset.throwIndex);
-        const unusedPoints = parseInt(input.value) || 0;
+        const unusedDice = diceSelector.querySelectorAll('.dice-button.unused');
+        const unusedSum = Array.from(unusedDice)
+            .reduce((sum, button) => sum + parseInt(button.dataset.value), 0);
         
-        throws[throwIndex].unusedPoints = unusedPoints;
-        gameSession.throws[gameSession.throws.length - 1 - throwIndex].unusedPoints = unusedPoints;
+        const throwIndex = parseInt(modal.dataset.throwIndex);
+        throws[throwIndex].unusedPoints = unusedSum;
+        gameSession.throws[gameSession.throws.length - 1 - throwIndex].unusedPoints = unusedSum;
         
         updateHistory();
         modal.style.display = 'none';
     };
+}
+
+// Функция для переключения состояния кубика
+function toggleDiceUnused(button) {
+    const diceSelector = button.parentElement;
+    const currentIndex = parseInt(button.dataset.index);
+    const isNowUnused = !button.classList.contains('unused');
+    
+    // Получаем все кнопки
+    const allButtons = diceSelector.querySelectorAll('.dice-button');
+    
+    if (isNowUnused) {
+        // Если отмечаем как неиспользованный, проверяем все кнопки до текущей
+        for (let i = 0; i <= currentIndex; i++) {
+            allButtons[i].classList.add('unused');
+        }
+    } else {
+        // Если снимаем отметку, проверяем все кнопки после текущей
+        for (let i = currentIndex; i < allButtons.length; i++) {
+            allButtons[i].classList.remove('unused');
+        }
+    }
+    
+    // Обновляем сумму в превью
+    const modal = document.getElementById('unusedPointsModal');
+    const throwIndex = parseInt(modal.dataset.throwIndex);
+    const throw_data = throws[throwIndex];
+    const baseSum = calculateThrowSum(throw_data.dice[0], throw_data.dice[1]);
+    const unusedSum = Array.from(diceSelector.querySelectorAll('.dice-button.unused'))
+        .reduce((sum, button) => sum + parseInt(button.dataset.value), 0);
+    
+    modal.querySelector('.throw-sum').textContent = 
+        `Сумма: ${baseSum - unusedSum}${unusedSum > 0 ? ` (${baseSum})` : ''}`;
 }

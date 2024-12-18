@@ -54,14 +54,16 @@
         </div>
     </div>
     <script src="script.js"></script>
-    <!-- Добавим модальное окно для редактирования неиспользованных очков -->
+    <!-- Обновим модальное окно -->
     <div class="modal" id="unusedPointsModal">
         <div class="modal-content">
             <h3>Неиспользованные очки</h3>
-            <div class="unused-points-controls">
-                <button class="minus">-</button>
-                <input type="number" min="0" max="24" value="0">
-                <button class="plus">+</button>
+            <div class="throw-preview">
+                <span class="throw-info"></span>
+                <span class="throw-sum"></span>
+            </div>
+            <div class="unused-dice-selector">
+                <!-- Сюда будут динамически добавляться кубики -->
             </div>
             <div class="modal-buttons">
                 <button class="cancel">Отмена</button>
