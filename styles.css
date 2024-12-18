@@ -14,27 +14,27 @@ body {
 .current-throw {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
+    gap: 12px;
+    margin: 12px 0;
 }
 
 .dice {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border: 2px solid var(--tg-theme-button-color, #3390ec);
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 24px;
     font-weight: bold;
     background-color: var(--tg-theme-bg-color, #fff);
 }
 
 .dice-selectors {
     display: flex;
-    gap: 16px;
-    margin: 20px 0;
+    gap: 12px;
+    margin: 12px 0;
 }
 
 .dice-selector {
@@ -43,27 +43,29 @@ body {
 }
 
 .dice-selector h3 {
-    margin: 0 0 10px 0;
-    font-size: 16px;
+    margin: 0 0 8px 0;
+    font-size: 14px;
     color: var(--tg-theme-hint-color, #999);
+    text-align: center;
 }
 
 .dice-buttons {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 8px;
 }
 
 .dice-buttons button {
-    padding: 20px;
+    padding: 16px;
     border: none;
     border-radius: 8px;
     background-color: var(--tg-theme-button-color, #3390ec);
     color: var(--tg-theme-button-text-color, #fff);
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     cursor: pointer;
     touch-action: manipulation;
+    height: 56px;
 }
 
 .dice-buttons button.selected {
@@ -170,17 +172,13 @@ body {
     }
     
     .dice-buttons {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 4px;
+        gap: 6px;
     }
     
     .dice-buttons button {
-        padding: 12px;
+        padding: 14px;
+        height: 48px;
         font-size: 20px;
-    }
-    
-    .dice-selector h3 {
-        font-size: 14px;
     }
 }
 
@@ -194,11 +192,18 @@ body {
 /* Добавим стили для очень маленьких экранов */
 @media (max-width: 320px) {
     .dice-selectors {
-        gap: 4px;
+        gap: 6px;
     }
     
     .dice-buttons button {
-        padding: 8px;
+        padding: 12px;
+        height: 44px;
         font-size: 18px;
+    }
+    
+    .dice {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
     }
 }
