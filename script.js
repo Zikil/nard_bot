@@ -120,7 +120,7 @@ function updateHistory() {
     const currentStatsSum = document.querySelector('.current-stats .sum');
     const currentStatsCount = document.querySelector('.current-stats span:last-child');
     currentStatsSum.innerHTML = `Сумма: ${totalFinalSum}${totalBaseSum !== totalFinalSum ? ` (${totalBaseSum})` : ''}`;
-    currentStatsCount.textContent = `Бросков: ${throws.length}`;
+    currentStatsCount.textContent = `Бр��сков: ${throws.length}`;
     
     // Обновляем историю бросков
     historyDiv.innerHTML = throws
@@ -226,7 +226,7 @@ function endGameSession() {
                 console.log('Game session ended and data sent:', sessionData);
             } else {
                 console.log('Game session end cancelled by user');
-                // Возвращаем кнопку в исходное состояние
+                // Возвращаем кнопку �� исходное состояние
                 tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
             }
         }
@@ -304,7 +304,7 @@ function openUnusedPointsModal(throwIndex) {
 
 // Функция для переключения состояния кубика
 function toggleDiceUnused(button) {
-    // Просто переключаем класс для нажатого кубика
+    // Просто переключаем класс для нажатого кубик��
     button.classList.toggle('unused');
     
     // Обновляем сумму в превью
@@ -323,9 +323,26 @@ function toggleDiceUnused(button) {
 }
 
 function createDiceDots(value) {
-    const dots = [];
-    for (let i = 0; i < (value === 1 ? 1 : value === 3 ? 3 : value === 5 ? 5 : 6); i++) {
-        dots.push('<div class="dot"></div>');
+    // Проверка валидности входного значения
+    if (value < 1 || value > 6) {
+        console.error('Неверное значение кубика:', value);
+        return '';
     }
-    return dots.join('');
+    
+    // Количество точек для каждого значения
+    const dotCounts = {
+        1: 1,  // центральная точка
+        2: 2,  // противоположные углы
+        3: 3,  // два угла + центр
+        4: 4,  // четыре угла
+        5: 5,  // четыре угла + центр
+        6: 6   // три точки с каждой стороны
+    };
+    
+    // Создаем нужное количество точек
+    const dots = Array(dotCounts[value])
+        .fill('<div class="dot"></div>')
+        .join('');
+    
+    return dots;
 }

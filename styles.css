@@ -34,9 +34,9 @@ body {
     border-radius: 8px;
     display: grid;
     grid-template-areas: 
-        "a . c"
-        "e g f"
-        "d . b";
+        "a . b"
+        "c g d"
+        "e . f";
     padding: 4px;
     background-color: var(--tg-theme-bg-color, #fff);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -53,11 +53,11 @@ body {
 
 /* Позиции точек для каждого значения */
 .dice[data-value="1"] { grid-template-areas: ". . ." ". g ." ". . ."; }
-.dice[data-value="2"] { grid-template-areas: "a . ." ". . ." ". . b"; }
-.dice[data-value="3"] { grid-template-areas: "a . ." ". g ." ". . b"; }
-.dice[data-value="4"] { grid-template-areas: "a . b" ". . ." "d . c"; }
-.dice[data-value="5"] { grid-template-areas: "a . b" ". g ." "d . c"; }
-.dice[data-value="6"] { grid-template-areas: "a . b" "d . c" "e . f"; }
+.dice[data-value="2"] { grid-template-areas: "a . ." ". . ." ". . f"; }
+.dice[data-value="3"] { grid-template-areas: "a . ." ". g ." ". . f"; }
+.dice[data-value="4"] { grid-template-areas: "a . b" ". . ." "e . f"; }
+.dice[data-value="5"] { grid-template-areas: "a . b" ". g ." "e . f"; }
+.dice[data-value="6"] { grid-template-areas: "a . b" "c . d" "e . f"; }
 
 .dot:nth-child(1) { grid-area: a; }
 .dot:nth-child(2) { grid-area: b; }
