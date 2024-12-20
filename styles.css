@@ -156,6 +156,76 @@ body {
     margin: 20px 0;
     cursor: pointer;
     touch-action: manipulation;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-button:active {
+    transform: scale(0.98);
+    background-color: var(--tg-theme-button-color, #2980dc);
+}
+
+.submit-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.submit-button:active::after {
+    animation: ripple 0.4s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+
+.dice-buttons button {
+    transition: all 0.2s ease;
+}
+
+.dice-buttons button:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+.dice-buttons button.selected {
+    background-color: var(--tg-theme-bg-color, #fff);
+    border: 2px solid var(--tg-theme-button-color, #3390ec);
+    color: var(--tg-theme-button-color, #3390ec);
+    box-shadow: 0 2px 8px rgba(51, 144, 236, 0.2);
+    animation: select-pulse 0.3s ease-out;
+}
+
+@keyframes select-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .history {

@@ -120,7 +120,7 @@ function updateHistory() {
     const currentStatsSum = document.querySelector('.current-stats .sum');
     const currentStatsCount = document.querySelector('.current-stats span:last-child');
     currentStatsSum.innerHTML = `Сумма: ${totalFinalSum}${totalBaseSum !== totalFinalSum ? ` (${totalBaseSum})` : ''}`;
-    currentStatsCount.textContent = `Бр��сков: ${throws.length}`;
+    currentStatsCount.textContent = `Бросков: ${throws.length}`;
     
     // Обновляем историю бросков
     historyDiv.innerHTML = throws
@@ -226,7 +226,7 @@ function endGameSession() {
                 console.log('Game session ended and data sent:', sessionData);
             } else {
                 console.log('Game session end cancelled by user');
-                // Возвращаем кнопку �� исходное состояние
+                // Возвращаем кнопку  исходное состояние
                 tg.MainButton.setText(`Завершить игру (${throws.length} 🎲)`);
             }
         }
@@ -304,7 +304,7 @@ function openUnusedPointsModal(throwIndex) {
 
 // Функция для переключения состояния кубика
 function toggleDiceUnused(button) {
-    // Просто переключаем класс для нажатого кубик��
+    // Просто переключаем класс для нажатого кубика
     button.classList.toggle('unused');
     
     // Обновляем сумму в превью
